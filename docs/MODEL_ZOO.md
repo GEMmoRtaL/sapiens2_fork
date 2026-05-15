@@ -48,3 +48,9 @@ Person bbox detector: [`facebook/detr-resnet-101-dc5`](https://huggingface.co/fa
 | Sapiens2-0.8B | [facebook/sapiens2-pointmap-0.8b](https://huggingface.co/facebook/sapiens2-pointmap-0.8b) |
 | Sapiens2-1B   | [facebook/sapiens2-pointmap-1b](https://huggingface.co/facebook/sapiens2-pointmap-1b)     |
 | Sapiens2-5B   | [facebook/sapiens2-pointmap-5b](https://huggingface.co/facebook/sapiens2-pointmap-5b)     |
+
+## Human Matting
+
+| Model | Checkpoint |
+|-------|------|
+| Sapiens2-1B | [facebook/sapiens2-matting-1b](https://huggingface.co/facebook/sapiens2-matting-1b) |

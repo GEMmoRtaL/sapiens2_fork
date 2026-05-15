@@ -5,6 +5,8 @@ Per-pixel alpha matting for human subjects. Predicts a soft foreground mask
 
 ## Inference Guide
 
+![Sapiens2-1B matting demo](assets/sapiens2_1b_matting_demo.gif)
+
 Runs on demo set (`demo/data`, 100 frames) by default:
 
 ```bash

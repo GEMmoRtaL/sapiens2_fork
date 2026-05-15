@@ -39,7 +39,11 @@
   <img src="./docs/assets/04.gif" alt="04" title="04" width="400"/>
 </p>
 
-A family of high-resolution transformers pretrained on 1 billion human images, achieving state-of-the-art performance across diverse human-centric tasks — pose estimation, body-part segmentation, surface normals, and pointmaps.
+A family of high-resolution transformers pretrained on 1 billion human images, achieving state-of-the-art performance across diverse human-centric tasks — pose estimation, body-part segmentation, surface normals, pointmaps, and human matting.
+
+## Updates
+
+- May 15, 2026: Sapiens2-1B human matting model is released.
 
 ## ⚡ Quick Start
 
@@ -105,6 +109,8 @@ sapiens2_host/
 │   └── sapiens2_{0.4b,0.8b,1b,5b}_normal.safetensors
 ├── pointmap/
 │   └── sapiens2_{0.4b,0.8b,1b,5b}_pointmap.safetensors
+├── matting/
+│   └── sapiens2_1b_matting.safetensors
 └── detector/                  # [optional] only needed for pose inference
     └── detr-resnet-101-dc5/
 ```
@@ -116,6 +122,7 @@ sapiens2_host/
 | Body-Part Segmentation | [docs/SEG.md](docs/SEG.md) | [docs/train/SEG.md](docs/train/SEG.md) |
 | Surface Normal Estimation | [docs/NORMAL.md](docs/NORMAL.md) | [docs/train/NORMAL.md](docs/train/NORMAL.md) |
 | Pointmap Estimation | [docs/POINTMAP.md](docs/POINTMAP.md) | [docs/train/POINTMAP.md](docs/train/POINTMAP.md) |
+| Human Matting | [docs/MATTING.md](docs/MATTING.md#inference-guide) | [docs/MATTING.md](docs/MATTING.md#training-guide) |
 
 ## ✨ Acknowledgements
 We would like to acknowledge the contributions of [DINOv3](https://github.com/facebookresearch/dinov3), [OpenMMLab](https://github.com/open-mmlab), and [Accelerate](https://github.com/huggingface/accelerate), which this project benefits from.
