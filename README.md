@@ -34,25 +34,6 @@
    </a>
 </p>
 
-<p align="center"><sub><b>🤗 Try the demos!</b></sub></p>
-<p align="center">
-   <a href='https://huggingface.co/spaces/facebook/sapiens2-pose'>
-      <img src='https://img.shields.io/badge/Pose-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Pose'>
-   </a>
-   <a href='https://huggingface.co/spaces/facebook/sapiens2-seg'>
-      <img src='https://img.shields.io/badge/Seg-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Seg'>
-   </a>
-   <a href='https://huggingface.co/spaces/facebook/sapiens2-normal'>
-      <img src='https://img.shields.io/badge/Normal-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Normal'>
-   </a>
-   <a href='https://huggingface.co/spaces/facebook/sapiens2-pointmap'>
-      <img src='https://img.shields.io/badge/Pointmap-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Pointmap'>
-   </a>
-   <a href='https://huggingface.co/spaces/facebook/sapiens2-matting'>
-      <img src='https://img.shields.io/badge/Matting-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Matting'>
-   </a>
-</p>
-
 <p align="center">
   <img src="./docs/assets/01.gif" alt="01" title="01" width="400"/>
   <img src="./docs/assets/03.gif" alt="03" title="03" width="400"/>
@@ -63,6 +44,15 @@
 </p>
 
 A family of high-resolution transformers pretrained on 1 billion human images, achieving state-of-the-art performance across diverse human-centric tasks — pose estimation, body-part segmentation, surface normals, pointmaps, and human matting.
+
+<p align="center">
+   🤗 <b>Demos:</b>
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-pose'>Pose</a> ·
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-seg'>Seg</a> ·
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-normal'>Normal</a> ·
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-pointmap'>Pointmap</a> ·
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-matting'>Matting</a>
+</p>
 
 ## 📣 News
 
