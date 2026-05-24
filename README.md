@@ -21,12 +21,35 @@
 </p>
 
 <p align="center">
+   <a href='https://rawalkhirodkar.github.io/sapiens2/'>
+      <img src='https://img.shields.io/badge/Sapiens2-Page-purple?style=for-the-badge&logo=Google%20chrome&logoColor=white&labelColor=4A148C&color=9C27B0' alt='Project Page'>
+   </a>
+
    <a href="https://arxiv.org/pdf/2604.21681">
       <img src='https://img.shields.io/badge/Paper-PDF-green?style=for-the-badge&logo=adobeacrobatreader&logoWidth=20&logoColor=white&labelColor=66cc00&color=94DD15' alt='Paper PDF'>
    </a>
 
    <a href='https://huggingface.co/collections/facebook/sapiens2'>
       <img src='https://img.shields.io/badge/HuggingFace-Hub-orange?style=for-the-badge&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='HuggingFace Hub'>
+   </a>
+</p>
+
+<p align="center"><sub><b>🤗 Try the demos!</b></sub></p>
+<p align="center">
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-pose'>
+      <img src='https://img.shields.io/badge/Pose-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Pose'>
+   </a>
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-seg'>
+      <img src='https://img.shields.io/badge/Seg-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Seg'>
+   </a>
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-normal'>
+      <img src='https://img.shields.io/badge/Normal-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Normal'>
+   </a>
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-pointmap'>
+      <img src='https://img.shields.io/badge/Pointmap-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Pointmap'>
+   </a>
+   <a href='https://huggingface.co/spaces/facebook/sapiens2-matting'>
+      <img src='https://img.shields.io/badge/Matting-orange?style=flat-square&logo=huggingface&logoColor=white&labelColor=FF5500&color=orange' alt='Matting'>
    </a>
 </p>
 
@@ -41,9 +64,10 @@
 
 A family of high-resolution transformers pretrained on 1 billion human images, achieving state-of-the-art performance across diverse human-centric tasks — pose estimation, body-part segmentation, surface normals, pointmaps, and human matting.
 
-## 📣 Updates
+## 📣 News
 
 - May 15, 2026: Sapiens2-1B human matting model is released.
+- April 24, 2026: Initial Sapiens2 release — pose, body-part segmentation, surface normals, and pointmaps.
 
 ## ⚡ Quick Start
 
@@ -66,7 +90,15 @@ with torch.no_grad():
     features = model(x)[0]  # dense backbone features
 ```
 
-The standalone files [`sapiens/backbones/standalone/sapiens2.py`](sapiens/backbones/standalone/sapiens2.py) and [`sapiens/backbones/standalone/sapiens.py`](sapiens/backbones/standalone/sapiens.py) (v1) are self-contained — copy either into your own project to use the backbone without the rest of this repo.
+## 🪶 Zero-Dependency Usage
+
+The Quick Start snippet above imports from a single self-contained file — `torch` (plus `safetensors` for checkpoint loading) is all you need. Drop the file into your project and you're done:
+
+```bash
+curl -O https://raw.githubusercontent.com/facebookresearch/sapiens2/main/sapiens/backbones/standalone/sapiens2.py
+```
+
+For Sapiens v1, grab [`sapiens.py`](sapiens/backbones/standalone/sapiens.py) instead.
 
 ## 🧬 Model Card
 
@@ -116,13 +148,13 @@ sapiens2_host/
 ```
 
 ## 🎯 Vision Tasks
-| Task | Inference | Train |
-|------|-----------|-------|
-| Pose Estimation | [docs/POSE.md](docs/POSE.md) | [docs/train/POSE.md](docs/train/POSE.md) |
-| Body-Part Segmentation | [docs/SEG.md](docs/SEG.md) | [docs/train/SEG.md](docs/train/SEG.md) |
-| Surface Normal Estimation | [docs/NORMAL.md](docs/NORMAL.md) | [docs/train/NORMAL.md](docs/train/NORMAL.md) |
-| Pointmap Estimation | [docs/POINTMAP.md](docs/POINTMAP.md) | [docs/train/POINTMAP.md](docs/train/POINTMAP.md) |
-| Human Matting | [docs/MATTING.md](docs/MATTING.md#inference-guide) | [docs/MATTING.md](docs/MATTING.md#training-guide) |
+| Task | Description | Inference | Train |
+|------|-------------|-----------|-------|
+| Pose Estimation | <sub>308 whole-body keypoints</sub> | [docs/POSE.md](docs/POSE.md) | [docs/train/POSE.md](docs/train/POSE.md) |
+| Body-Part Segmentation | <sub>29 body parts</sub> | [docs/SEG.md](docs/SEG.md) | [docs/train/SEG.md](docs/train/SEG.md) |
+| Surface Normal Estimation | <sub>per-pixel normals</sub> | [docs/NORMAL.md](docs/NORMAL.md) | [docs/train/NORMAL.md](docs/train/NORMAL.md) |
+| Pointmap Estimation | <sub>per-pixel 3D points</sub> | [docs/POINTMAP.md](docs/POINTMAP.md) | [docs/train/POINTMAP.md](docs/train/POINTMAP.md) |
+| Human Matting | <sub>alpha matte + foreground</sub> | [docs/MATTING.md](docs/MATTING.md) | [docs/train/MATTING.md](docs/train/MATTING.md) |
 
 ## ✨ Acknowledgements
 We would like to acknowledge the contributions of [DINOv3](https://github.com/facebookresearch/dinov3), [OpenMMLab](https://github.com/open-mmlab), and [Accelerate](https://github.com/huggingface/accelerate), which this project benefits from.
@@ -130,7 +162,7 @@ We would like to acknowledge the contributions of [DINOv3](https://github.com/fa
 ## 🤝 Contributing
 For questions or issues, please open an issue on GitHub. See [CONTRIBUTING](CONTRIBUTING.md) and the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## 📜 License
+## License
 This project is licensed under the [Sapiens2 License](LICENSE.md).
 
 ## 📚 Citation
