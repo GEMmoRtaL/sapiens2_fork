@@ -2,16 +2,16 @@
 # Run 308-keypoint pose estimation on a directory of images.
 
 cd "$(dirname "$(realpath "$0")")/../.." || exit
-SAPIENS_CHECKPOINT_ROOT="${SAPIENS_CHECKPOINT_ROOT:-${HOME}/sapiens2_host}"
-
+# SAPIENS_CHECKPOINT_ROOT="${SAPIENS_CHECKPOINT_ROOT:-${HOME}/sapiens2_host}"
+SAPIENS_CHECKPOINT_ROOT="/root/Workspace/sapiens2/sapiens2_host"
 #----------------------------set your input and output directories-------------------------
 INPUT='../../demo/data'
-OUTPUT="${HOME}/Desktop/sapiens2/pose/Outputs/vis"
-
+# OUTPUT="${HOME}/Desktop/sapiens2/pose/Outputs/vis"
+OUTPUT="/root/Workspace/sapiens2/outputs/pose"
 #--------------------------MODEL CARD (uncomment one)---------------------------------------
-# MODEL_NAME='sapiens2_0.4b'; CHECKPOINT="${SAPIENS_CHECKPOINT_ROOT}/pose/sapiens2_0.4b_pose.safetensors"
+MODEL_NAME='sapiens2_0.4b'; CHECKPOINT="${SAPIENS_CHECKPOINT_ROOT}/pose/sapiens2_0.4b_pose.safetensors"
 # MODEL_NAME='sapiens2_0.8b'; CHECKPOINT="${SAPIENS_CHECKPOINT_ROOT}/pose/sapiens2_0.8b_pose.safetensors"
-MODEL_NAME='sapiens2_1b';   CHECKPOINT="${SAPIENS_CHECKPOINT_ROOT}/pose/sapiens2_1b_pose.safetensors"
+# MODEL_NAME='sapiens2_1b';   CHECKPOINT="${SAPIENS_CHECKPOINT_ROOT}/pose/sapiens2_1b_pose.safetensors"
 # MODEL_NAME='sapiens2_5b';   CHECKPOINT="${SAPIENS_CHECKPOINT_ROOT}/pose/sapiens2_5b_pose.safetensors"
 
 DATASET='shutterstock_goliath_3po'
@@ -30,8 +30,8 @@ KPT_THRES=0.3
 RUN_FILE='tools/vis/vis_pose.py'
 
 # Number of inference jobs per GPU and which GPUs to use
-JOBS_PER_GPU=2; GPU_IDS=(0 1 2 3 4 5 6 7)
-# JOBS_PER_GPU=1; GPU_IDS=(0)
+# JOBS_PER_GPU=2; GPU_IDS=(0 1 2 3 4 5 6 7)
+JOBS_PER_GPU=1; GPU_IDS=(0)
 TOTAL_JOBS=$((JOBS_PER_GPU * ${#GPU_IDS[@]}))
 
 # Find images and partition across jobs
