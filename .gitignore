@@ -86,3 +86,4 @@ wandb/
 # after forking
 .trae/
 sapiens2_host/
+multi-person_dataset/
