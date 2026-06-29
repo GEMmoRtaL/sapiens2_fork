@@ -14,12 +14,15 @@ from argparse import ArgumentParser
 import cv2
 import numpy as np
 import torch
-from PIL import Image
 from sapiens.pose.datasets import parse_pose_metainfo, UDPHeatmap
-from sapiens.pose.evaluators import nms
 from sapiens.pose.models import init_model
 from tqdm import tqdm
-from transformers import DetrForObjectDetection, DetrImageProcessor
+
+# Import shared detector/detection functions from original repo
+_vis_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'vis')
+if _vis_dir not in sys.path:
+    sys.path.insert(0, _vis_dir)
+from vis_pose import _detector_cache, _get_detector, _detect_persons  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Model size → config path (relative to sapiens/pose/)
@@ -32,62 +35,22 @@ MODEL_CONFIGS = {
 }
 
 # ---------------------------------------------------------------------------
-# DETR detector cache (singleton, same as vis_pose.py)
-# ---------------------------------------------------------------------------
-_detector_cache: dict = {}
-
-
-def _get_detector(device: str, ckpt_dir: str):
-    if "model" not in _detector_cache:
-        _detector_cache["proc"] = DetrImageProcessor.from_pretrained(ckpt_dir)
-        _detector_cache["model"] = (
-            DetrForObjectDetection.from_pretrained(ckpt_dir).eval().to(device)
-        )
-    return _detector_cache["proc"], _detector_cache["model"]
-
-
-def _detect_persons(image_bgr: np.ndarray, device: str, det_checkpoint: str,
-                    bbox_thr: float, nms_thr: float) -> np.ndarray:
-    proc, model = _get_detector(device, det_checkpoint)
-    image_rgb = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB)
-    pil_img = Image.fromarray(image_rgb)
-    inputs = proc(images=pil_img, return_tensors="pt").to(device)
-    with torch.no_grad():
-        outputs = model(**inputs)
-    target_sizes = torch.tensor([image_rgb.shape[:2]], device=device)
-    results = proc.post_process_object_detection(
-        outputs, target_sizes=target_sizes, threshold=bbox_thr
-    )[0]
-    person_mask = results["labels"] == 1
-    boxes = results["boxes"][person_mask].cpu().numpy()
-    scores = results["scores"][person_mask].cpu().numpy().reshape(-1, 1)
-    bboxes = np.concatenate([boxes, scores], axis=1)
-    bboxes = bboxes[nms(bboxes, nms_thr), :4]
-    if len(bboxes) == 0:
-        h, w = image_rgb.shape[:2]
-        bboxes = np.array([[0, 0, w - 1, h - 1]], dtype=np.float32)
-    return bboxes
-
-
-# ---------------------------------------------------------------------------
 # Per-image inference (with timing).  Mirrors vis_pose.process_one_image
 # but injects CUDA-event timers around detector, model forward, and total.
 # ---------------------------------------------------------------------------
-def process_one_image_timed(image: np.ndarray, model, device: str,
-                            det_checkpoint: str, bbox_thr: float,
-                            nms_thr: float):
+def process_one_image_timed(image: np.ndarray, model, args):
     """Run detection + pose estimation on one image; return (keypoints,
     keypoint_scores, bboxes, timing_dict)."""
     timer = {}
 
     # --- detector ---
-    torch.cuda.synchronize(device)
+    torch.cuda.synchronize(args.device)
     t0 = torch.cuda.Event(enable_timing=True)
     t1 = torch.cuda.Event(enable_timing=True)
     t0.record()
-    bboxes = _detect_persons(image, device, det_checkpoint, bbox_thr, nms_thr)
+    bboxes = _detect_persons(image, args)
     t1.record()
-    torch.cuda.synchronize(device)
+    torch.cuda.synchronize(args.device)
     timer["detector_ms"] = t0.elapsed_time(t1)
 
     # --- pipeline + preprocessor (not timed separately, folded into total) ---
@@ -105,7 +68,7 @@ def process_one_image_timed(image: np.ndarray, model, device: str,
     inputs = torch.cat(inputs_list, dim=0)
 
     # --- model forward ---
-    torch.cuda.synchronize(device)
+    torch.cuda.synchronize(args.device)
     m0 = torch.cuda.Event(enable_timing=True)
     m1 = torch.cuda.Event(enable_timing=True)
     m0.record()
@@ -119,7 +82,7 @@ def process_one_image_timed(image: np.ndarray, model, device: str,
             pred_flipped = pred_flipped[:, flip_indices]
             pred = (pred + pred_flipped) / 2.0
     m1.record()
-    torch.cuda.synchronize(device)
+    torch.cuda.synchronize(args.device)
     timer["model_ms"] = m0.elapsed_time(m1)
 
     # --- decode ---
@@ -299,8 +262,7 @@ def main():
         for img_path in tqdm(warmup_paths, desc=f"  warmup {model_size}", leave=False):
             image = cv2.imread(img_path)
             try:
-                process_one_image_timed(image, model, args.device,
-                                        args.det_checkpoint, args.bbox_thr, args.nms_thr)
+                process_one_image_timed(image, model, args)
             except Exception:
                 pass  # ignore warmup errors
         torch.cuda.synchronize(args.device)
@@ -319,8 +281,7 @@ def main():
             t_start = time.perf_counter()
             try:
                 _, _, _, timer = process_one_image_timed(
-                    image, model, args.device,
-                    args.det_checkpoint, args.bbox_thr, args.nms_thr,
+                    image, model, args,
                 )
             except Exception as e:
                 print(f"  [warn] inference failed on {os.path.basename(img_path)}: {e}")
